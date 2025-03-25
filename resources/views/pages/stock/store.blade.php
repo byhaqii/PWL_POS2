@@ -28,7 +28,7 @@
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="form-group">
                             <label for="stock_qty">Quantity</label>
-                            <input type="text" name="stock_qty" id="stock_qty" class="form-control" value="{{ old('stock_qty') }}">
+                            <input type="number" name="stock_qty" id="stock_qty" class="form-control" value="{{ old('stock_qty') }}">
                             @error('stock_qty')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror

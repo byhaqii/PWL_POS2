@@ -85,7 +85,14 @@ class UserController extends Controller
 
             return $btn;
         })
-        ->rawColumns(['actions'])
+        ->addColumn('actions-ajax', function ($user) {
+            $btn = '<button type="button" class="details-user-ajax-btn btn btn-primary btn-sm ml-0 ml-md-2" data-toggle="modal" data-target="#detailsUserAjaxModal" data-id="' . $user->user_id . '">Details</button>';
+            $btn .= '<button type="button" class="update-user-ajax-btn btn btn-warning btn-sm ml-0 ml-md-2" data-toggle="modal" data-target="#updateUserAjaxModal" data-id="' . $user->user_id . '">Update</button>';
+            $btn .= '<button type="button" class="delete-user-ajax-btn btn btn-danger btn-sm ml-0 ml-md-2" data-id="' . $user->user_id . '">Delete</button>';
+
+            return $btn;
+        })
+        ->rawColumns(['actions', 'actions-ajax'])
         ->make(true);
     }
 
@@ -100,6 +107,30 @@ class UserController extends Controller
         ]);
 
         return redirect()->route('users.page')->with('success', 'User created successfully.')->withInput($request->only('username', 'name'));
+    }
+
+    public function storeAjax(UserRequest $request) {
+        if (!$request->validated()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create user. Please check again your data.',
+                'errors' => $request->errors(),
+            ]);
+        }
+
+        $validatedData = $request->validated();
+        User::create([
+            'level_id' => $validatedData['level_id'],
+            'username' => $validatedData['username'],
+            'name' => $validatedData['name'],
+            'password' => bcrypt($validatedData['password']),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User created successfully.',
+            'data' => $validatedData
+        ]);
     }
 
     public function show(string $id) {
@@ -121,6 +152,16 @@ class UserController extends Controller
         return view('pages.user.show', compact('user', 'metadata'));
     }
 
+    public function showAjax(string $id) {
+        $user = User::with('level')->findOrFail($id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User details found.',
+            'data' => $user
+        ]);
+    }
+
     public function update(UserRequest $request, string $id) {
         $validatedData = $request->validated();
 
@@ -134,6 +175,32 @@ class UserController extends Controller
 
         return redirect()->route('users.page')->with('success', 'User updated successfully.')->withInput($request->only('username', 'name'));
     }
+    
+    public function updateAjax(UserRequest $request, string $id) {
+        if (!$request->validated()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update user. Please check again your data.',
+                'errors' => $request->errors(),
+            ]);
+        }
+
+        $validatedData = $request->validated();
+
+        $user = User::findOrFail($id);
+        $user->update([
+            'level_id' => $validatedData['level_id'],
+            'username' => $validatedData['username'],
+            'name' => $validatedData['name'],
+            'password' => bcrypt($validatedData['password']),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User updated successfully.',
+            'data' => $validatedData
+        ]);
+    }
 
     public function delete(string $id) {
         $user = User::findOrFail($id);
@@ -141,21 +208,15 @@ class UserController extends Controller
 
         return redirect()->route('users.page')->with('success', 'User deleted successfully.');
     }
-    public function create_ajax()
-    {
-        return view('pages.user.create_ajax');
-    }
 
-    public function store_ajax(Request $request)
-    {
-        $request->validate([
-            'username' => 'required|unique:users',
-            'name' => 'required',
-            'email' => 'required|email',
+    public function deleteAjax(string $id) {
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User deleted successfully.',
+            'data' => $user
         ]);
-
-        $user = User::create($request->all());
-
-        return response()->json(['success' => $user ? true : false]);
     }
 }

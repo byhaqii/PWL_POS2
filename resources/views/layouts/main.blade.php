@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
-    {{-- Sweet Alert 2 --}}
+    {{-- SweetAlert2 --}}
     <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
     {{-- Push Custom CSS --}}
     @stack('styles')
@@ -66,19 +66,14 @@
         <aside class="control-sidebar control-sidebar-dark">
             <!-- Control sidebar content goes here -->
         </aside>
-        <!-- /.control-sidebar -->
     </div>
     <!-- End of Site Wrapper -->
 
     <!-- jQuery -->
     <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
-
-    <!-- jQuery Validation -->
+    {{-- JQuery Validation --}}
     <script src="{{ asset('assets/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/jquery-validation/additional-methods.min.js') }}"></script>
-    <!-- Sweet Alert 2 -->
-    <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
-
     <!-- Bootstrap 4 -->
     <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- AdminLTE App -->
@@ -96,6 +91,8 @@
     <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+    {{-- SweetAlert2 --}}
+    <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 	{{-- Push Custom Scripts --}}
 	<script>
 		$.ajaxSetup({

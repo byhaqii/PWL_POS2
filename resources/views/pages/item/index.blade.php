@@ -20,6 +20,8 @@
                 <p class="my-0 fs-4">Items Table</p>
                 <div class="d-flex align-items-center">
                     <a href="{{ route('items.store-page') }}" class="btn btn-primary btn-sm ml-0 ml-md-2">Create New Item</a>
+                    <button type="button" class="btn btn-primary btn-sm ml-0 ml-md-2" data-toggle="modal"
+                        data-target="#newItemAjaxModal">Create New Item (AJAX)</button>
                 </div>
             </div>
         </div>
@@ -32,11 +34,17 @@
                         <th>Name</th>
                         <th>Category</th>
                         <th>Actions</th>
+                        <th>Actions AJAX</th>
                     </tr>
                 </thead>
             </table>
         </div>
     </div>
+
+    {{-- Load Modals --}}
+    @include('pages.item.components.store-ajax')
+    @include('pages.item.components.update-ajax')
+    @include('pages.item.components.details-ajax')
 @endsection
 
 @push('scripts')
@@ -77,7 +85,48 @@
                     orderable: false,
                     searchable: false
                 },
+                {
+                    data: "actions-ajax",
+                    orderable: false,
+                    searchable: false
+                },
             ],
+        });
+    </script>
+
+    {{-- Delete Item --}}
+    <script>
+        $(document).on('click', '.delete-item-ajax-btn', function() {
+            let itemId = $(this).data('id');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/items/${itemId}/delete-ajax`,
+                        type: 'DELETE',
+                        success: function(response) {
+                            Swal.fire(
+                                'Deleted!',
+                                response.message,
+                                'success'
+                            );
+
+                            $('#itemsTable').DataTable().ajax.reload();
+                        },
+                        error: function(xhr) {
+                            console.log(xhr.responseText);
+                        }
+                    });
+                }
+            });
         });
     </script>
 @endpush
