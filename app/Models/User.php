@@ -53,4 +53,12 @@ class User extends Authenticatable
     public function level(): BelongsTo {
         return $this->belongsTo(Level::class, 'level_id', 'level_id');
     }
+
+    public function hasLevel(string $level): bool {
+        return $this->level->level_code === $level;
+    }
+
+    public function getLevel(): string {
+        return $this->level->level_code;
+    }
 }
